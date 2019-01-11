@@ -1,0 +1,12 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.rastargame.rick.rickivbrowse"
+    >
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application>
+        <activity android:name=".view.RickIvBrowseActivity"
+            android:theme="@style/rick_ivBrowse_activity_theme"
+            />
+
+    </application>
+</manifest>
