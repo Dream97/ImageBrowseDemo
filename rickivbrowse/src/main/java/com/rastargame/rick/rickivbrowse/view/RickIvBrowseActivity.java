@@ -23,15 +23,18 @@ public class RickIvBrowseActivity extends AppCompatActivity {
     private TextView mRickTitle;
     private TextView mRickPosition;
     private RickViewPagerAdapter mRickViewPagerAdapter;
+    private RickBrowseImageView mRickImageView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rick_browse);
-        mRickViewPager = findViewById(R.id.rick_viewpager);
-        mRickTitle = findViewById(R.id.rick_tv_title);
-        mRickPosition = findViewById(R.id.rick_tv_position);
+//        mRickViewPager = findViewById(R.id.rick_viewpager);
+//        mRickTitle = findViewById(R.id.rick_tv_title);
+//        mRickPosition = findViewById(R.id.rick_tv_position);
         //viewpager
-        setAdapter(RickSpec.getInstance().getContentType());
+//        setAdapter(RickSpec.getInstance().getContentType());
+        mRickImageView = findViewById(R.id.rick_iv_test);
+        mRickImageView.setImageResource(RickSpec.getInstance().getResList().get(0));
     }
 
 

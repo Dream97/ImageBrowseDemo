@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application','maven'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
@@ -19,17 +19,17 @@ android {
 }
 
 uploadArchives{
-    repositories.mavenDeployer {
-        // 本地仓库路径D:\WorkSpace
-//        repository(url: uri('../repository'))
-        repository(url: "file://E://MyRepositories/")
-        // 唯一标识
-        pom.groupId = "com.rastargame.rick"
-        // 项目名称
-        pom.artifactId = "rickivbrowse"
-        // 版本号
-        pom.version = "1.0.0"
-    }
+//    repositories.mavenDeployer {
+//        // 本地仓库路径D:\WorkSpace
+////        repository(url: uri('../repository'))
+//        repository(url: "file://E://MyRepositories/")
+//        // 唯一标识
+//        pom.groupId = "com.rastargame.rick"
+//        // 项目名称
+//        pom.artifactId = "rickivbrowse"
+//        // 版本号
+//        pom.version = "1.0.0"
+//    }
 }
 
 dependencies {
