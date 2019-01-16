@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
         title.add("第1张图片");
         title.add("第2张图片");
-        title.add("第3张图片");
-        title.add("第4张图片");
-        title.add("第5张图片");
+//        title.add("第3张图片");
+//        title.add("第4张图片");
+//        title.add("第5张图片");
 
         RickUrlContent rickContent = new RickUrlContent.Builder()
                 .addUrl(list)
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         list.add(R.drawable.iv_floor_23);
         RickResContent rickResContent = new RickResContent.Builder()
                 .addRes(list)
+                .addTiTle(title)
                 .build();
         RickIvBrowse.with(this)
                 .cycle(true)

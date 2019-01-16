@@ -7,9 +7,11 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 
 import com.squareup.picasso.Picasso;
@@ -29,25 +31,50 @@ public class RickBrowseImageView extends android.support.v7.widget.AppCompatImag
     private float mInitScale; //显示正常图片时的缩放比例
     private Float SCALE_MAX = 6f;
     private ScaleGestureDetector mScaleGestureDetector; //多点触控 伸缩手势探测器
+    private GestureDetector mGestureDetector; //多点触控探测器 用于监听双击
+    private int mDoubleTap;
+    private RickIvBrowseActivity mActivity;
     private float mLastX = 0; //记录上一次触摸的点
     private float mLastY = 0;
+
     /**
      * 用于存放矩阵的9个值
      */
     private final float[] matrixValues = new float[9];
 
-    public RickBrowseImageView(Context context) {
+    public RickBrowseImageView(RickIvBrowseActivity context) {
         this(context, null);
     }
 
-    public RickBrowseImageView(Context context, AttributeSet attrs) {
+    public RickBrowseImageView(RickIvBrowseActivity context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RickBrowseImageView(Context context, AttributeSet attributeSet, int res) {
+    public RickBrowseImageView(final RickIvBrowseActivity context, AttributeSet attributeSet, int res) {
         super(context, attributeSet, res);
         super.setScaleType(ScaleType.MATRIX);
+        this.mActivity = context;
         mScaleGestureDetector = new ScaleGestureDetector(context, this);
+        mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public boolean onDoubleTap(MotionEvent e) { //双击监听
+                float x = e.getX();
+                float y = e.getY(); //中心点
+                float scale = 4; //放大到四倍
+                if (mInitScale < getCurrentScale()) { //如果当前缩放值大于初始 则缩小
+                    scale(mInitScale, x, y);
+                } else {
+                    scale(scale, x, y);
+                }
+                return true;
+            }
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                mActivity.showTitle();
+                return true;
+            }
+        });
+        mDoubleTap = ViewConfiguration.get(context).getScaledDoubleTapSlop();
         this.setOnTouchListener(this);
         Log.d(TAG, "RickBrowseImageView: ------------------------------------------------");
     }
@@ -73,6 +100,7 @@ public class RickBrowseImageView extends android.support.v7.widget.AppCompatImag
      */
     @Override
     public void onGlobalLayout() {
+        getParent().requestDisallowInterceptTouchEvent(true);
         if (first) { //防止渲染多次
             Drawable drawable = getDrawable();//获取当前图片
             if (drawable == null) {
@@ -110,15 +138,7 @@ public class RickBrowseImageView extends android.support.v7.widget.AppCompatImag
         mMatrix.getValues(matrixValues);
         float scale = matrixValues[Matrix.MSCALE_X]; //当前缩放值
         float scaleFactor = detector.getScaleFactor();
-        if ((scale * scaleFactor) > SCALE_MAX) { // || (scale * scaleFactor) < mInitScale  ) { //如果大于最大值 或者 小于最小值
-            scaleFactor = SCALE_MAX / scale;
-        }
-        if ((scale * scaleFactor) < mInitScale) {
-            scaleFactor = mInitScale / scale;
-        }
-        mMatrix.postScale(scaleFactor, scaleFactor, detector.getFocusX(), detector.getFocusY()); //以中心点缩放
-        centerControl(); //边界控制
-        setImageMatrix(mMatrix);
+        scale(scaleFactor, detector.getFocusX(), detector.getFocusY());
         return true;
     }
 
@@ -133,20 +153,31 @@ public class RickBrowseImageView extends android.support.v7.widget.AppCompatImag
     }
 
     /**
+     * 获取当前缩放值
+     * @return 当前缩放值
+     */
+    public float getCurrentScale() {
+        mMatrix.getValues(matrixValues);
+        float scale = matrixValues[Matrix.MSCALE_X]; //当前缩放值
+        return scale;
+    }
+    /**
      * 触摸事件
-     *
-     * @param v
-     * @param event
+     * @param v 控件
+     * @param event 事件
      * @return
      */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        getParent().requestDisallowInterceptTouchEvent(true);
         mScaleGestureDetector.onTouchEvent(event);
+        mGestureDetector.onTouchEvent(event);
+        int pointNum = event.getPointerCount();
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
-                float dx = event.getX() - mLastX;
-                float dy = event.getY() - mLastY;
-                if (mLastX != -1) {
+                if (mLastX != -1 && pointNum == 1) {
+                    float dx = event.getX() - mLastX;
+                    float dy = event.getY() - mLastY;
                     moveMatriX(dx, dy); //进行移动
                 }
                 mLastX = event.getX();
@@ -184,6 +215,7 @@ public class RickBrowseImageView extends android.support.v7.widget.AppCompatImag
                 dx = -rectF.left;
             }
         } else {
+            getParent().requestDisallowInterceptTouchEvent(false);
             dx = 0;
         }
 
@@ -203,7 +235,26 @@ public class RickBrowseImageView extends android.support.v7.widget.AppCompatImag
     }
 
     /**
-     * 边界控制
+     * 缩放
+     * @param scaleFactor 缩放比例
+     * @param x 缩放点X
+     * @param y 缩放点Y
+     */
+    public void scale(float scaleFactor, float x, float y) {
+        float scale = matrixValues[Matrix.MSCALE_X]; //当前缩放值
+        if ((scale * scaleFactor) > SCALE_MAX) { // || (scale * scaleFactor) < mInitScale  ) { //如果大于最大值 或者 小于最小值
+            scaleFactor = SCALE_MAX / scale;
+        }
+        if ((scale * scaleFactor) < mInitScale) {
+            scaleFactor = mInitScale / scale;
+        }
+        mMatrix.postScale(scaleFactor, scaleFactor, x, y); //以中心点缩放
+        centerControl(); //边界控制
+        setImageMatrix(mMatrix);
+    }
+
+    /**
+     * 中心/边界控制
      */
     public void centerControl() {
         RectF rectF = new RectF();

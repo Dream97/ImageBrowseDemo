@@ -3,6 +3,9 @@ package com.rastargame.rick.rickivbrowse.view;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rastargame.rick.rickivbrowse.R;
@@ -18,23 +21,27 @@ import java.util.ArrayList;
  * Email: zhiyuanfeng@rastar.com
  * Date: 2019/1/10
  */
-public class RickIvBrowseActivity extends AppCompatActivity {
+public class RickIvBrowseActivity extends AppCompatActivity implements View.OnClickListener {
     private ViewPager mRickViewPager;
     private TextView mRickTitle;
+    private LinearLayout mLlTitle;
     private TextView mRickPosition;
+    private ImageView mIvClose;
     private RickViewPagerAdapter mRickViewPagerAdapter;
-    private RickBrowseImageView mRickImageView;
+    private boolean isTitleShow = true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rick_browse);
-//        mRickViewPager = findViewById(R.id.rick_viewpager);
-//        mRickTitle = findViewById(R.id.rick_tv_title);
-//        mRickPosition = findViewById(R.id.rick_tv_position);
+        mRickViewPager = findViewById(R.id.rick_viewpager);
+        mRickTitle = findViewById(R.id.rick_tv_title);
+        mRickPosition = findViewById(R.id.rick_tv_position);
+        mLlTitle = findViewById(R.id.rick_ll_title);
+        mIvClose = findViewById(R.id.rick_iv_close);
+        mIvClose.setOnClickListener(this);
         //viewpager
-//        setAdapter(RickSpec.getInstance().getContentType());
-        mRickImageView = findViewById(R.id.rick_iv_test);
-        mRickImageView.setImageResource(RickSpec.getInstance().getResList().get(0));
+        setAdapter(RickSpec.getInstance().getContentType());
+        showTitle();
     }
 
 
@@ -88,5 +95,26 @@ public class RickIvBrowseActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+    }
+
+    public void showTitle() {
+        if(isTitleShow) {
+            mLlTitle.setVisibility(View.GONE);
+            mRickTitle.setVisibility(View.GONE);
+            mRickPosition.setVisibility(View.GONE);
+            isTitleShow = false;
+        } else {
+            mLlTitle.setVisibility(View.VISIBLE);
+            mRickTitle.setVisibility(View.VISIBLE);
+            mRickPosition.setVisibility(View.VISIBLE);
+            isTitleShow = true;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.rick_iv_close) {
+            finish();
+        }
     }
 }

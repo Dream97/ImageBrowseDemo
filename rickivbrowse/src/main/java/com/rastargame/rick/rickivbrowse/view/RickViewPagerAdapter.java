@@ -17,9 +17,9 @@ import java.util.ArrayList;
 public class RickViewPagerAdapter extends PagerAdapter {
     private ArrayList<String> mImgList = new ArrayList<>();
     private ArrayList<Integer> mResList = new ArrayList<>();
-    private Context context;
+    private RickIvBrowseActivity context;
 
-    public RickViewPagerAdapter(Context context, ArrayList<String> imgList,  ArrayList<Integer> resList) {
+    public RickViewPagerAdapter(RickIvBrowseActivity context, ArrayList<String> imgList,  ArrayList<Integer> resList) {
         if (imgList == null) {
             this.mResList = resList;
         } else {
@@ -49,9 +49,7 @@ public class RickViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         //container  容器  相当于用来存放imageView
 
-        ImageView rickBrowseImageView = new ImageView(context);
-
-        rickBrowseImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        RickBrowseImageView rickBrowseImageView = new RickBrowseImageView(context);
 
         if (mImgList.size() == 0) {
             RickImageLoader.display(context, mResList.get(position), rickBrowseImageView);
