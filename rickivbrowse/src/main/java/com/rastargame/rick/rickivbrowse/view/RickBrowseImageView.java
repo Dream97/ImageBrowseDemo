@@ -113,9 +113,13 @@ public class RickBrowseImageView extends android.support.v7.widget.AppCompatImag
             int drawableWidth = drawable.getIntrinsicWidth();
             int drawableHeight = drawable.getIntrinsicHeight();
             float scale = 1.0f;
-            if (drawableWidth > width || drawableHeight > height) { //如果图片宽度大于控件宽度
+            /**
+             * 图片刚好适应控件大小
+             */
+//            if (drawableWidth > width || drawableHeight > height) { //如果图片宽度大于控件宽度
                 scale = Math.min(width * 1.0f / drawableWidth, height * 1.0f / drawableHeight);
-            }
+//            }
+
             mInitScale = scale;
             SCALE_MAX = mInitScale * 6;
             // 图片移动至屏幕中心

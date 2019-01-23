@@ -33,6 +33,17 @@ public class RickSpec {
     }
     private RickSpec() {}
 
+    public void clear() {
+        contentType = 0;
+        isCycle = false;
+        urlList = new ArrayList<>(); //图片链接
+        resList = new ArrayList<>(); //R资源链接
+        titleList = new ArrayList<>(); //图片标题
+        title = null; //标题
+        url = null; //链接
+        res = -1; //单独R资源
+    }
+
     public List<String> getTitleList() {
         return titleList;
     }

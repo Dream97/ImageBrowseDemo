@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Date: 2019/1/10
  */
 public class RickIvBrowseActivity extends AppCompatActivity implements View.OnClickListener {
-    private ViewPager mRickViewPager;
+    private RickViewPager mRickViewPager;
     private TextView mRickTitle;
     private LinearLayout mLlTitle;
     private TextView mRickPosition;
@@ -77,11 +77,22 @@ public class RickIvBrowseActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (RickSpec.getInstance().getContentType() == RickCode.RICK_CONTENT_TYPE_RES_LIST || RickSpec.getInstance().getContentType() == RickCode.RICK_CONTENT_TYPE_URL_LiST) {
-                    if (RickSpec.getInstance().getTitleList().size() > 0) {
+                    /**
+                     * 多张图片
+                     */
+                    if (RickSpec.getInstance().getTitleList().size() >= (position + 1)) {
+                        /**
+                         * 是否有标题
+                         */
                         mRickTitle.setText(RickSpec.getInstance().getTitleList().get(position));
+                    } else {
+                        mRickTitle.setText("");
                     }
                     mRickPosition.setText((position+1)+"/"+(RickSpec.getInstance().getUrlList().size() > 0 ? RickSpec.getInstance().getUrlList().size(): RickSpec.getInstance().getResList().size()));
                 } else {
+                    /**
+                     * 单张图片
+                     */
                     if (RickSpec.getInstance().getTitle() != null) {
                         mRickTitle.setText(RickSpec.getInstance().getTitle());
                     }
@@ -97,6 +108,9 @@ public class RickIvBrowseActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
+    /**
+     * 设置标题
+     */
     public void showTitle() {
         if(isTitleShow) {
             mLlTitle.setVisibility(View.GONE);
@@ -114,6 +128,7 @@ public class RickIvBrowseActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.rick_iv_close) {
+            RickSpec.getInstance().clear(); //清空数据
             finish();
         }
     }
