@@ -27,7 +27,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    api 'com.squareup.picasso:picasso:2.71828'
+    api ('com.squareup.picasso:picasso:2.71828') {
+        exclude group: 'com.android.support'
+    }
+
 }
 // 上传到私服
 Properties properties = new Properties()

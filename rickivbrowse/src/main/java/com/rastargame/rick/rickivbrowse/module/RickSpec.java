@@ -18,6 +18,7 @@ public class RickSpec {
     private String title; //标题
     private String url; //链接
     private int res; //单独R资源
+    private int position; //位置
 
     private static RickSpec mRickSpec;
     public static RickSpec getInstance() {
@@ -42,6 +43,14 @@ public class RickSpec {
         title = null; //标题
         url = null; //链接
         res = -1; //单独R资源
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public List<String> getTitleList() {

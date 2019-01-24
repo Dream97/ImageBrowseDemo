@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .addTiTle(mTitleList.get(0))
                         .build();
                 RickIvBrowse.with(this)
-                        .cycle(true)
                         .content(rickResContent1)
                         .position(0)
                         .start();
@@ -74,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .addTiTle(mTitleList)
                         .build();
                 RickIvBrowse.with(this)
-                        .cycle(true)
                         .content(rickResContent2)
                         .position(0)
                         .start();
@@ -85,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .addTiTle(mTitleList.get(0))
                         .build();
                 RickIvBrowse.with(this)
-                        .cycle(true)
                         .content(rickContent1)
                         .position(0)
                         .start();
@@ -96,9 +93,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .addTiTle(mTitleList)
                         .build();
                 RickIvBrowse.with(this)
-                        .cycle(true)
                         .content(rickContent2)
-                        .position(0)
+                        .position(3)
                         .start();
                 break;
         }

@@ -25,10 +25,15 @@ public final class RickPicker {
         this.mRickIvBrowse = rickIvBrowse;
     }
 
+
+    public RickPicker(RickIvBrowse rickIvBrowse) {
+        this.mRickIvBrowse = rickIvBrowse;
+    }
+
     /**
      * 添加图片资源
-     * @param rickContent
-     * @return
+     * @param rickContent 内容载体
+     * @return 建造者模式 返回本身
      */
     public RickPicker content(RickContent rickContent) {
         if (rickContent instanceof RickUrlContent) { //使用Url查看图片
@@ -57,7 +62,13 @@ public final class RickPicker {
         return this;
     }
 
-    public RickPicker position(int Position) {
+    /**
+     * 设置当前浏览图片
+     * @param position 当前位子
+     * @return 建造者模式，返回本身
+     */
+    public RickPicker position(int position) {
+        RickSpec.getInstance().setPosition(position);
         return this;
     }
 

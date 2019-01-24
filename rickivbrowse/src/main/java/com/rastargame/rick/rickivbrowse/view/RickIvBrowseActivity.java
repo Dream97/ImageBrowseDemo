@@ -106,6 +106,7 @@ public class RickIvBrowseActivity extends AppCompatActivity implements View.OnCl
             public void onPageScrollStateChanged(int state) {
             }
         });
+        mRickViewPager.setCurrentItem(RickSpec.getInstance().getPosition());
     }
 
     /**

@@ -1,7 +1,9 @@
 package com.rastargame.rick.rickivbrowse.util;
 
 import android.content.Context;
+import android.os.Build;
 import android.widget.ImageView;
+
 import com.squareup.picasso.Picasso;
 
 /**
@@ -18,8 +20,13 @@ public class RickImageLoader {
     }
 
     public static void display(Context context, int res, ImageView imageView) {
-        Picasso.get()
-                .load(res)
-                .into(imageView);
+        if (Build.VERSION.SDK_INT > 23) {
+            Picasso.get()
+                    .load(res)
+                    .into(imageView);
+
+        } else {
+            imageView.setImageResource(res);
+        }
     }
 }

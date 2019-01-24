@@ -33,8 +33,9 @@ public class RickIvBrowse {
      * @param activity
      * @return
      */
-    public static RickIvBrowse with(Activity activity) {
-        return new RickIvBrowse(activity);
+    public static RickPicker with(Activity activity) {
+        RickIvBrowse rickIvBrowse = new RickIvBrowse(activity);
+        return new RickPicker(rickIvBrowse);
     }
 
     /**
@@ -42,8 +43,9 @@ public class RickIvBrowse {
      * @param fragment
      * @return
      */
-    public static RickIvBrowse with(Fragment fragment) {
-        return new RickIvBrowse(fragment);
+    public static RickPicker with(Fragment fragment) {
+        RickIvBrowse rickIvBrowse = new RickIvBrowse(fragment);
+        return new RickPicker(rickIvBrowse);
     }
 
     /**
@@ -51,7 +53,7 @@ public class RickIvBrowse {
      * @param isCycle
      * @return
      */
-    public RickPicker cycle(boolean isCycle) {
+    private RickPicker cycle(boolean isCycle) {
         return new RickPicker(this, isCycle);
     }
 
