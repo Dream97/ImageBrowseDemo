@@ -68,14 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .start();
                 break;
             case R.id.bt_res_more:
-                RickResContent rickResContent2 = new RickResContent.Builder()
-                        .addRes(mResList)
-                        .addTiTle(mTitleList)
-                        .build();
-                RickIvBrowse.with(this)
-                        .content(rickResContent2)
-                        .position(0)
-                        .start();
+
                 break;
             case R.id.bt_url_one:  /** 显示单张图片 **/
                 RickUrlContent rickContent1 = new RickUrlContent.Builder()
