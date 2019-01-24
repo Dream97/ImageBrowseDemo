@@ -1,6 +1,9 @@
 apply plugin: 'com.android.library'
-apply plugin:'maven-publish'
-apply plugin:'maven'
+//apply plugin:'maven-publish'
+//apply plugin:'maven'
+//发布到jcenter仓库
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -36,23 +39,134 @@ dependencies {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: properties.getProperty("POM_URL")) {
-                authentication(userName: properties.getProperty("nexus.user"), password: properties.getProperty("nexus.password"))
-            }
+//    repositories {
+//        mavenDeployer {
+//            repository(url: properties.getProperty("POM_URL")) {
+//                authentication(userName: properties.getProperty("nexus.user"), password: properties.getProperty("nexus.password"))
+//            }
+//
+//            pom.groupId = properties.getProperty("POM_GROUP_ID")
+//            pom.artifactId = properties.getProperty("POM_ATRIFACT_ID")
+//            pom.version = properties.getProperty("POM_VERSION")
+//
+//            pom.project {
+//                licenses {
+//                    license {
+//                        name 'The Apache Software License, Version 2.0'
+//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                    }
+//                }
+//            }
+//        }
+//    }
+}
 
-            pom.groupId = properties.getProperty("POM_GROUP_ID")
-            pom.artifactId = properties.getProperty("POM_ATRIFACT_ID")
-            pom.version = properties.getProperty("POM_VERSION")
+//上传到jcenter
 
-            pom.project {
+group = "com.rastargame.rick"
+version = "1.0.0"
+
+def siteUrl = properties.getProperty("siteUrl")
+def gitUrl =properties.getProperty("gitUrl")
+def POM_GROUP_ID=properties.getProperty("POM_GROUP_ID")
+def POM_ATRIFACT_ID= properties.getProperty("POM_ATRIFACT_ID")
+def POM_VERSION=properties.getProperty("POM_VERSION")
+def project_name = properties.getProperty("project_name")
+def project_description = properties.getProperty("project_description")
+
+install {
+    repositories.mavenInstaller {
+        // 生成pom.xml和参数
+        pom {
+            project {
+                packaging 'aar'
+                name project_name// 项目名称。
+                description project_description// 项目描述。
+                url siteUrl // 项目主页，这里是引用上面定义好。
+
+                // 软件开源协议，现在一般都是Apache License2.0
                 licenses {
                     license {
                         name 'The Apache Software License, Version 2.0'
                         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
+
+                //填写开发者基本信息，复制我的，这里需要修改。
+                developers {
+                    developer {
+                        id 'rickandroid' // 开发者的id。
+                        name 'rickandroid' // 开发者名字。
+                        email 'fengzhiyuan1024@gmail.com' // 开发者邮箱。
+                    }
+                }
+
+                // SCM，复制我的，这里不需要修改。
+                scm {
+                    connection gitUrl // Git仓库地址。
+                    developerConnection gitUrl // Git仓库地址。
+                    url siteUrl // 项目主页。
+                }
+
+                dependencies{
+                    dependency{
+                        groupId POM_GROUP_ID
+                        version POM_VERSION
+                        artifactId POM_ATRIFACT_ID
+                        scope "compile"
+
+                    }
+
+                }
+            }
+        }
+    }
+}
+
+// 生成jar包的task，不需要修改。
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+// 生成jarDoc的task，不需要修改。
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    // destinationDir = file("../javadoc/")
+    failOnError false // 忽略注释语法错误，如果用jdk1.8你的注释写的不规范就编译不过。
+}
+// 生成javaDoc的jar，不需要修改。
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+
+def bintray_user = properties.getProperty("bintray.user")
+def bintray_key = properties.getProperty("bintray.apikey")
+def bintray_gpg_pwd = properties.getProperty("bintray.gpg.password")
+
+bintray {
+    user = bintray_user
+    key = bintray_key
+    configurations = ['archives']
+
+    pkg {
+        repo = POM_ATRIFACT_ID
+        name = POM_ATRIFACT_ID
+//        userOrg = "angryboby"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+        version{
+            gpg{
+                sign = true
+                passphrase = bintray_gpg_pwd
             }
         }
     }
